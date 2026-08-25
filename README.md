@@ -34,5 +34,6 @@ pytest
 ## Docker
 
 ```powershell
+Copy-Item .env.example .env
 docker compose up --build
 ```

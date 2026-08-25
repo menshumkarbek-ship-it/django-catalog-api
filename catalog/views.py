@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Category, Product, Review
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsOwnerOrAdmin, IsOwnerOrAdminForAll
 from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -22,7 +22,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.select_related("author", "product").all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsOwnerOrAdmin]
+    permission_classes = [IsOwnerOrAdminForAll, IsOwnerOrAdmin]
     filterset_fields = ["product", "rating"]
     search_fields = ["text"]
 

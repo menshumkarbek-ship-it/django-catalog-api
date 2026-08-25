@@ -33,3 +33,10 @@ def test_review_owner_can_edit_but_other_user_cannot(api_client, user):
     assert api_client.patch(f"/api/reviews/{review.pk}/", {"text": "Changed"}).status_code == 403
     api_client.force_authenticate(user=user)
     assert api_client.patch(f"/api/reviews/{review.pk}/", {"text": "Changed"}).status_code == 200
+
+@pytest.mark.django_db
+def test_review_create_requires_authentication(api_client):
+    category = Category.objects.create(name="Books", slug="books")
+    product = Product.objects.create(name="Django", description="Guide", price=10, category=category)
+    response = api_client.post("/api/reviews/", {"product": product.pk, "text": "Good", "rating": 5})
+    assert response.status_code == 401
